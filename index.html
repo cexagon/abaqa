@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abaqa, belajar dan bermain</title>
+<meta name="description" content="Abaqa: aplikasi belajar untuk anak SD kelas 1 dan 2. Latihan ujian sesuai kisi-kisi sekolah dan game edukasi, dipakai bersama orang tua.">
+<meta name="theme-color" content="#FFF3D1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Abaqa">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./home/home.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="head">
+    <img class="logo" src="./icons/icon-192.png" width="72" height="72" alt="">
+    <div>
+      <h1>Abaqa</h1>
+      <p class="lede">Tempat belajar dan bermain untuk anak SD kelas 1 dan 2, ditemani orang tua.</p>
+    </div>
+  </header>
+
+  <section class="cat" aria-labelledby="h-formal">
+    <h2 id="h-formal">Pelajaran formal</h2>
+    <ul class="cards">
+      <li><a class="card formal" href="./latihan-kelas-1/" data-progress="latihan-s1-skor" data-total="21">
+        <span class="top">
+          <span class="pic"><img src="./latihan-kelas-1/aset/open-book.svg" alt="" width="72" height="72"></span>
+          <span class="txt"><span class="name">Latihan Ujian Kelas 1</span>
+          <span class="desc">Belajar dulu, lalu latihan 7 pelajaran untuk ASAS semester 1.</span></span>
+        </span>
+        <span class="prog" data-prog></span>
+        <span class="go">Mulai belajar</span>
+      </a></li>
+      <li><a class="card formal" href="./latihan-kelas-2/" data-progress="latihan-k2-s1-skor" data-total="21">
+        <span class="top">
+          <span class="pic"><img src="./latihan-kelas-1/aset/books.svg" alt="" width="72" height="72"></span>
+          <span class="txt"><span class="name">Latihan Ujian Kelas 2</span>
+          <span class="desc">Belajar dulu, lalu latihan 7 pelajaran untuk ASAS semester 1.</span></span>
+        </span>
+        <span class="prog" data-prog></span>
+        <span class="go">Mulai belajar</span>
+      </a></li>
+    </ul>
+  </section>
+
+  <section class="cat" aria-labelledby="h-game">
+    <h2 id="h-game">Game edukasi</h2>
+    <ul class="cards">
+      <li><a class="card game" href="./kebun-hitung/" data-kebun>
+        <span class="top">
+          <span class="pic"><img src="./home/kancil.svg" alt="" width="72" height="72"></span>
+          <span class="txt"><span class="name">Kebun Hitung</span>
+          <span class="desc">Berhitung bareng Kancil di Warung Tebu: 10 bab, cerita, dan pasar 3D.</span></span>
+        </span>
+        <span class="prog" data-prog></span>
+        <span class="go">Ayo main</span>
+      </a></li>
+      <li><a class="card game" href="./lab-bu-canni/" data-lab>
+        <span class="top">
+          <span class="pic"><img src="./home/pipo.svg" alt="" width="72" height="72"></span>
+          <span class="txt"><span class="name">Lab Rahasia Bu Canni</span>
+          <span class="desc">Bantu robot Pipo menuju misi rover Mars: 5 episode sains.</span></span>
+        </span>
+        <span class="prog" data-prog></span>
+        <span class="go">Ayo main</span>
+      </a></li>
+    </ul>
+  </section>
+
+  <footer class="foot">Nilai dan bintang tersimpan di tablet ini, tanpa akun.</footer>
+</main>
+<script src="./home/home.js"></script>
+</body>
+</html>

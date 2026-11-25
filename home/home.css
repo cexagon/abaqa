@@ -1,0 +1,64 @@
+/* Beranda Abaqa. Token dan bahasa visual sama dengan latihan-kelas-* dan Kebun Hitung. */
+:root {
+  --sky: #FFF3D1; --hill: #F6DE9A; --ink: #3B2614; --ink-soft: #6B4E33;
+  --leaf: #4E9A3C; --leaf-deep: #3A7B2B; --leaf-soft: #EAF3DC;
+  --accent: #E8742A; --accent-deep: #B8501A; --sel: #FFE9CF; --card: #FFFCF3; --line: #E3C98E;
+  --display: "Baloo 2", "Nunito", system-ui, sans-serif;
+  --body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body { background: var(--sky); color: var(--ink); font-family: var(--body); font-weight: 700; -webkit-tap-highlight-color: transparent;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); overflow-x: hidden; }
+h1, h2, p, ul { margin: 0; padding: 0; }
+h1, h2 { font-family: var(--display); font-weight: 800; line-height: 1.05; }
+ul { list-style: none; }
+a { color: inherit; text-decoration: none; }
+a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
+::selection { background: var(--hill); }
+
+.wrap { max-width: 960px; margin: 0 auto; padding: 20px 16px 32px; }
+.head { display: flex; align-items: center; gap: 16px; padding: 8px 0 4px; }
+.logo { border-radius: 18px; flex: none; box-shadow: 0 4px 0 var(--accent-deep); }
+.head h1 { font-size: clamp(40px, 7vw, 56px); }
+.lede { margin-top: 6px; font-size: 18px; line-height: 1.4; color: var(--ink-soft); max-width: 40ch; text-wrap: balance; }
+
+.cat { margin-top: 28px; }
+.cat h2 { font-size: 22px; color: var(--ink-soft); margin: 0 0 12px 4px; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+
+.card { height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 16px; background: #fff; border: 3px solid var(--hill);
+  border-radius: 26px; box-shadow: 0 6px 0 var(--hill); transition: transform .1s, box-shadow .1s; min-height: 220px; }
+.card:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--hill); }
+.top { display: flex; gap: 14px; align-items: center; }
+.pic { flex: none; width: 96px; height: 96px; border-radius: 22px; display: grid; place-items: center; }
+.formal .pic { background: var(--leaf-soft); }
+.game .pic { background: var(--sel); }
+.pic img { width: 76px; height: 76px; display: block; }
+.txt { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.name { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.05; }
+.desc { font-size: 16px; line-height: 1.35; color: var(--ink-soft); }
+.prog { font-size: 15px; color: var(--ink-soft); min-height: 20px; margin-top: auto; }
+.prog b { font-family: var(--display); font-size: 18px; color: var(--ink); }
+.prog.soon b { color: var(--accent-deep); }
+.go { display: flex; align-items: center; justify-content: center; min-height: 60px; border-radius: 18px; border: 3px solid; color: #fff;
+  font-family: var(--display); font-weight: 800; font-size: 22px; }
+.formal .go { background: var(--leaf-deep); border-color: #2C6120; box-shadow: 0 5px 0 #2C6120; }
+.game .go { background: var(--accent-deep); border-color: #8E3C10; box-shadow: 0 5px 0 #8E3C10; }
+.card:active .go { transform: translateY(3px); box-shadow: none; }
+.card[aria-disabled="true"] { background: var(--card); }
+.card[aria-disabled="true"] .pic img { filter: grayscale(.6); }
+.card[aria-disabled="true"] .go { background: #E9E2D3; border-color: var(--line); color: var(--ink); box-shadow: none; }
+
+.foot { margin-top: 28px; text-align: center; font-size: 14px; color: var(--ink-soft); }
+
+@media (max-width: 600px) {
+  .cards { grid-template-columns: 1fr; gap: 14px; }
+  .card { min-height: 0; }
+  .head { gap: 12px; }
+  .logo { width: 60px; height: 60px; }
+  .lede { font-size: 17px; }
+}
+@media (hover: hover) { .card:hover { transform: translateY(-2px); } .card:hover:active { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .card, .card * { transition: none !important; } .card:hover, .card:active { transform: none; } }

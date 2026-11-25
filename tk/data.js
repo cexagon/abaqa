@@ -16,7 +16,7 @@ window.TK = {
     {"h": "L", "kata": "Lebah", "gambar": "aset/honeybee.svg", "ucap": "el"},
     {"h": "M", "kata": "Mangga", "gambar": "aset/mango.svg", "ucap": "em"},
     {"h": "N", "kata": "Nanas", "gambar": "aset/pineapple.svg", "ucap": "en"},
-    {"h": "O", "kata": "Onta", "gambar": "aset/camel.svg", "ucap": "o"},
+    {"h": "O", "kata": "Orang utan", "gambar": "aset/orangutan.svg", "ucap": "o"},
     {"h": "P", "kata": "Pisang", "gambar": "aset/banana.svg", "ucap": "pe"},
     {"h": "Q", "kata": "Quran", "gambar": "aset/green-book.svg", "ucap": "ki"},
     {"h": "R", "kata": "Rusa", "gambar": "aset/deer.svg", "ucap": "er"},
@@ -91,6 +91,6 @@ window.TK = {
     {"nama": "persegi panjang", "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"6\" y=\"26\" width=\"88\" height=\"48\" rx=\"4\" fill=\"#43A047\"/></svg>", "contoh": "aset/door.svg"},
     {"nama": "bintang", "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><polygon points=\"50,6 62,36 94,38 69,58 78,90 50,72 22,90 31,58 6,38 38,36\" fill=\"#FB8C00\"/></svg>", "contoh": "aset/star.svg"},
     {"nama": "hati", "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><path d=\"M50 90 C14 62 8 40 8 30 C8 16 19 8 31 8 C40 8 47 13 50 20 C53 13 60 8 69 8 C81 8 92 16 92 30 C92 40 86 62 50 90Z\" fill=\"#E91E63\"/></svg>", "contoh": "aset/red-heart.svg"},
-    {"nama": "oval", "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><ellipse cx=\"50\" cy=\"50\" r=\"30\" ry=\"42\" fill=\"#8E24AA\"/></svg>", "contoh": "aset/egg.svg"},
+    {"nama": "oval", "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><ellipse cx=\"50\" cy=\"50\" rx=\"30\" ry=\"42\" fill=\"#8E24AA\"/></svg>", "contoh": "aset/egg.svg"},
   ],
 };

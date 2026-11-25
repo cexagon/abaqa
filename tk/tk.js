@@ -107,7 +107,7 @@
   function buildMenu() {
     var ul = $('#menuCards');
     ul.innerHTML = ORDER.map(function (k) {
-      return '<li><a class="m-card" href="#' + k + '" data-k="' + k + '" style="--mc:' + MENU[k].c + '"><span class="m-art">' + MENU[k].art() + '</span><span class="m-name">' + esc(SEC[k].name) + '</span></a></li>';
+      return '<li><a class="m-card" href="#' + k + '" data-k="' + k + '" style="--mc:' + MENU[k].c + '"><span class="m-art">' + MENU[k].art() + '</span><span class="m-name">' + esc(SEC[k].name).replace(/ (A–Z|1–10)$/, '\u00a0$1') + '</span></a></li>';
     }).join('');
     ul.addEventListener('click', function (e) {
       var a = e.target.closest('.m-card'); if (a) say([SEC[a.dataset.k].say]);
@@ -117,6 +117,30 @@
   /* ---------- bagian: papan + panggung ---------- */
   var cur = null, sel = -1, counted = 0;
   var sec = $('#sec'), stage = $('#stage'), body = $('#stBody'), board = $('#board');
+  /* papan dibungkus supaya ada isyarat "masih ada di bawah" */
+  var wrap = document.createElement('div'); wrap.className = 'board-wrap';
+  board.parentNode.insertBefore(wrap, board); wrap.appendChild(board);
+  var fade = document.createElement('div'); fade.className = 'board-fade'; fade.setAttribute('aria-hidden', 'true'); fade.innerHTML = icon('next'); wrap.appendChild(fade);
+  function checkMore() { wrap.classList.toggle('more', board.scrollHeight - board.clientHeight - board.scrollTop > 6); }
+  board.addEventListener('scroll', checkMore, { passive: true });
+  /* ukuran benda hitung: terbesar yang muat rapi di ruang yang ada, tanpa menimpa angka */
+  function fitItems() {
+    var box = body.querySelector('.items'); if (!box) return;
+    var n = box.children.length, cs = getComputedStyle(box), W = box.clientWidth - 16, gx = 10, gy = 12, H;
+    if (cs.flexGrow === '0') H = Math.max(180, Math.min(300, innerHeight * .28)); else { box.style.setProperty('--it', '40px'); H = box.clientHeight - 12; }
+    var best = 0, fallback = 40;
+    for (var s = 128; s >= 40; s -= 4) {
+      var cols = Math.max(1, Math.floor((W + gx) / (s + gx))), rows = Math.ceil(n / cols);
+      if (rows * (s + gy) - gy > H) continue;
+      if (!fallback || fallback === 40) fallback = s;
+      /* hindari satu benda sendirian di baris terakhir */
+      if (rows > 1 && n % cols === 1) continue;
+      best = s; break;
+    }
+    if (!best) best = fallback;
+    box.style.setProperty('--it', best + 'px');
+  }
+  window.addEventListener('resize', function () { fitItems(); checkMore(); });
 
   function buildBoard() {
     board.innerHTML = cur.list.map(function (x, i) {
@@ -124,6 +148,7 @@
       return '<button class="tile" type="button" role="listitem" aria-pressed="false" aria-label="' + esc(cur.label(x)) + '" data-i="' + i + '" style="--tc:' + c + '">' +
         cur.glyph(x) + extra + (seen(cur.key, cur.id(x)) ? '<svg class="seen" aria-hidden="true"><use href="#i-star"/></svg>' : '') + '</button>';
     }).join('');
+    checkMore();
   }
   board.addEventListener('click', function (e) { var t = e.target.closest('.tile'); if (t) select(+t.dataset.i, true); });
 
@@ -135,10 +160,10 @@
       h = '<div class="st-main"><div class="st-glyph" aria-hidden="true">' + esc(x.h) + '<small>' + esc(x.h.toLowerCase()) + '</small></div>' +
         '<img class="st-pic" src="' + esc(x.gambar) + '" alt="' + esc(x.kata) + '"></div><div class="st-word">' + wordHL(x.kata) + '</div>';
     } else if (k === 'angka') {
-      var it = x.n <= 4 ? 110 : x.n <= 6 ? 96 : 80, ims = '';
+      var ims = '';
       for (var i = 0; i < x.n; i++) ims += '<button class="item" type="button" aria-label="Hitung"><img src="' + esc(x.gambar) + '" alt=""></button>';
       counted = 0;
-      h = '<div class="st-main"><div class="st-glyph" aria-hidden="true">' + x.n + '</div></div><div class="items" style="--it:' + it + 'px">' + ims + '</div><div class="st-word">' + esc(cap(x.kata)) + '</div>';
+      h = '<div class="st-main"><div class="st-glyph" aria-hidden="true">' + x.n + '</div></div><div class="items">' + ims + '</div><div class="st-word">' + esc(cap(x.kata)) + '</div>';
     } else if (k === 'hijaiah') {
       h = '<div class="st-glyph arab" lang="ar" dir="rtl">' + esc(x.h) + '</div><div class="st-word">' + esc(x.nama) + '</div>';
     } else if (k === 'warna') {
@@ -147,6 +172,7 @@
       h = '<div class="st-main"><div class="st-shape" aria-hidden="true">' + x.svg + '</div>' + (x.contoh ? '<div class="st-eg"><img src="' + esc(x.contoh) + '" alt=""></div>' : '') + '</div><div class="st-word">' + esc(cap(x.nama)) + '</div>';
     }
     body.innerHTML = h;
+    if (k === 'angka') fitItems();
   }
   function renderIdle() {
     stage.dataset.state = 'idle';
@@ -264,20 +290,22 @@
     sec.dataset.sec = k;
     var st = sec.style; st.setProperty('--tint', cur.tint); st.setProperty('--hue', cur.hue); st.setProperty('--hue-deep', cur.deep);
     document.body.style.background = cur.tint;
-    $('#secTitle').innerHTML = '<span class="t">' + esc(cur.name) + '</span>';
+    $('#secTitle').innerHTML = '<span class="t">' + esc(cur.name).replace(/ (A–Z|1–10)$/, '\u00a0$1') + '</span>';
     $('#modeLearn').href = '#' + k; $('#modeQuiz').href = '#' + k + '/cari'; $('#celDone').href = '#' + k;
     $('#modeLearn').setAttribute('aria-current', quiz ? 'false' : 'page'); $('#modeQuiz').setAttribute('aria-current', quiz ? 'page' : 'false');
     $('#learn').hidden = quiz; $('#quiz').hidden = !quiz;
     if (!quiz) { if (changed || !board.children.length) { buildBoard(); sel = -1; } renderIdle(); sel = -1; board.querySelectorAll('.tile').forEach(function (t) { t.setAttribute('aria-pressed', 'false'); }); }
     else startQuiz();
     cur._last = k;
+    checkMore(); setTimeout(checkMore, 60);
     window.scrollTo(0, 0);
   }
   /* judul bagian: tampil di layar lebar; ikon cukup di ponsel */
   window.addEventListener('hashchange', route);
 
+  $('#ortuH').setAttribute('tabindex', '-1');
   buildMenu(); drawStars();
-  $('#openOrtu').addEventListener('click', function () { var d = $('#ortu'); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); });
+  $('#openOrtu').addEventListener('click', function () { var d = $('#ortu'); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); d.scrollTop = 0; try { $('#ortuH').focus({ preventScroll: true }); } catch (e) {} });
   $('#ortuClose').addEventListener('click', function () { $('#ortu').close(); });
   /* tombol kembali ke menu: hash kosong */
   sec.querySelector('.back').addEventListener('click', function (e) { e.preventDefault(); history.pushState(null, '', location.pathname + location.search); route(); });

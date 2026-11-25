@@ -133,12 +133,19 @@
   function hurufUcap(L) { var r = (D.huruf || []).filter(function (x) { return x.h === L; })[0]; return r ? r.ucap : L.toLowerCase(); }
   /* suku kata: konsonan tinta, vokal berwarna */
   function syl(t) { return '<span class="syl-t"><b>' + esc(t.slice(0, -1)) + '</b><i>' + esc(t.slice(-1)) + '</i></span>'; }
-  function grp(n, g, gone) { var h = ''; for (var i = 0; i < n; i++) h += '<span class="ob' + (gone && i >= n - gone ? ' gone' : '') + '">' + img(g) + '</span>'; return '<span class="grp">' + h + '</span>'; }
+  function grp(n, g, gone) { var h = '<span class="r5">'; for (var i = 0; i < n; i++) { if (i && i % 5 === 0) h += '</span><span class="r5">'; h += '<span class="ob' + (gone && i >= n - gone ? ' gone' : '') + '">' + img(g) + '</span>'; } return '<span class="grp">' + h + '</span></span>'; }
   function sumRes(x) { return x.op === '+' ? x.a + x.b : x.a - x.b; }
   function sumSay(x) { return numWord(x.a) + (x.op === '+' ? ' tambah ' : ' kurang ') + numWord(x.b); }
   function sumVis(x) { return '<div class="sum">' + (x.op === '+' ? grp(x.a, x.gambar) + '<span class="op">+</span>' + grp(x.b, x.gambar) : grp(x.a, x.gambar, x.b)) + '</div>'; }
   function polaSeq(p, len) { var out = []; for (var i = 0; i < len; i++) out.push(p.benda[p.pola.charCodeAt(i % p.pola.length) - 65]); return out; }
   function polaRow(seq, q) { return '<div class="pola">' + seq.map(function (i) { return '<span class="ob">' + img(BENDA[i].gambar) + '</span>'; }).join('') + (q ? '<span class="ob q" aria-label="yang dicari">?</span>' : '') + '</div>'; }
+  /* panggung: satu kelompok per satuan pola, boleh pindah baris di antara satuan tapi tidak di tengahnya */
+  function polaUnits(p, len, q) {
+    var s = polaSeq(p, len), u = p.pola.length, h = '', Qm = '<span class="ob q" aria-label="yang dicari">?</span>';
+    for (var i = 0; i < s.length; i += u) { var part = s.slice(i, i + u); h += '<span class="pu">' + part.map(function (k) { return '<span class="ob">' + img(BENDA[k].gambar) + '</span>'; }).join('') + (q && i + u >= s.length && part.length < u ? Qm : '') + '</span>'; }
+    if (q && s.length % u === 0) h += '<span class="pu">' + Qm + '</span>';
+    return '<div class="pola units' + (q ? ' ask' : '') + '">' + h + '</div>';
+  }
   function polaLen(p) { return p.pola.length <= 3 ? 6 : 8; }
 
   SEC.suku = {
@@ -234,9 +241,9 @@
   };
   SEC.pola = {
     name: 'Pola', say: 'Pola', list: T2.pola || [], tint: '#FFEFB8', hue: '#9A6F00', deep: '#6E4F00', idle: 'pola', tahap: 2, wide: true, qname: 'Main',
-    id: function (p) { return p.pola; }, glyph: function (p) { return polaRow(polaSeq(p, 4)); }, label: function (p) { return 'Pola ' + polaSeq(p, p.pola.length).map(function (i) { return BENDA[i].nama; }).join(', '); },
+    id: function (p) { return p.pola; }, glyph: function (p) { return polaRow(polaSeq(p, 3)); }, label: function (p) { return 'Pola ' + polaSeq(p, p.pola.length).map(function (i) { return BENDA[i].nama; }).join(', '); },
     speak: function (p) { var o = []; polaSeq(p, polaLen(p)).forEach(function (i, j) { if (j) o.push(120); o.push(BENDA[i].nama); }); return o; },
-    stage: function (p) { return polaRow(polaSeq(p, polaLen(p))) + '<div class="st-word sm">' + polaSeq(p, p.pola.length).map(function (i) { return esc(BENDA[i].nama); }).join(', ') + ', …</div>'; },
+    stage: function (p) { return polaUnits(p, polaLen(p)) + '<div class="st-word sm">' + polaSeq(p, p.pola.length).map(function (i) { return esc(BENDA[i].nama); }).join(', ') + ', …</div>'; },
     makeQ: function () {
       var types = ['AB', pick(['AAB', 'ABB']), 'ABC', 'AABB', 'ABCD'];
       return types.map(function (t) {
@@ -244,7 +251,7 @@
         var p = { pola: t, benda: shuffle(BENDA.map(function (b, i) { return i; })).slice(0, n) };
         var shown = Math.max(5, 2 * t.length - 1), seq = polaSeq(p, shown + 1), ans = seq[shown], o = [ans];
         shuffle(p.benda).concat(shuffle(BENDA.map(function (b, i) { return i; }))).forEach(function (i) { if (o.indexOf(i) < 0 && o.length < 3) o.push(i); });
-        return { ask: 'Apa selanjutnya?', prompt: polaRow(seq.slice(0, shown), true), win: BENDA[ans].nama,
+        return { ask: 'Apa selanjutnya?', prompt: polaUnits(p, shown, true), win: BENDA[ans].nama,
           choices: shuffle(o).map(function (i) { return { html: img(BENDA[i].gambar), label: BENDA[i].nama, ok: i === ans }; }) };
       });
     }
@@ -476,9 +483,11 @@
       return '<button class="ch" type="button" data-ok="' + (c.ok ? 1 : 0) + '" data-v="' + esc(c.v == null ? '' : c.v) + '" aria-label="' + esc(c.label) + '" style="--tc:' + COL[(i + Q.i) % COL.length] + '">' + c.html + '</button>';
     }).join('');
     if (q.seq) markSeq();
+    nextSlot();
     if (speak !== false) say([q.ask]);
   }
   /* susun kata: tombol yang benar adalah suku kata berikutnya */
+  function nextSlot() { var sl = $('#qPrompt').querySelectorAll('.slot'); sl.forEach(function (x, i) { x.classList.toggle('next', i === Q.pos); }); }
   function markSeq() { var need = Q.q.seq[Q.pos]; $('#choices').querySelectorAll('.ch').forEach(function (b) { b.dataset.ok = b.dataset.v === need ? '1' : '0'; }); }
   $('#qSay').addEventListener('click', function () { if (Q && Q.q) say([Q.q.ask]); });
   function burst(el) {
@@ -500,6 +509,7 @@
       if (slot) { slot.innerHTML = b.innerHTML; slot.classList.add('on'); }
       Q.pos++; Q.wrong = 0; $('#choices').classList.remove('hinting');
       $('#choices').querySelectorAll('.hint').forEach(function (h) { h.classList.remove('hint'); });
+      nextSlot();
       if (Q.pos < Q.q.seq.length) { markSeq(); say([b.dataset.v]); return; }
       $('#qPrompt').classList.add('done');
     }
@@ -536,6 +546,7 @@
     sec.dataset.sec = k; sec.classList.toggle('wide', !!cur.wide);
     if (S.tahap !== cur.tahap) { S.tahap = cur.tahap; save(); }
     $('#modeQuiz').querySelector('span').textContent = cur.qname || 'Coba cari';
+    $('#modeQuiz').querySelector('use').setAttribute('href', '#i-' + (cur.qname === 'Susun' ? 'puzzle' : cur.qname === 'Main' ? 'play' : 'search'));
     var st = sec.style; st.setProperty('--tint', cur.tint); st.setProperty('--hue', cur.hue); st.setProperty('--hue-deep', cur.deep);
     document.body.style.background = cur.tint;
     $('#secTitle').innerHTML = '<span class="t">' + nb(cur.name) + '</span>';

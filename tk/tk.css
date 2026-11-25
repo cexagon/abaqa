@@ -340,3 +340,50 @@ dialog .big-go { width: 100%; }
   .q-prompt { gap: 12px 18px; }
 }
 .nw { white-space: nowrap; }
+
+/* --- perbaikan review visual Tahap 2 --- */
+/* tab tahap: yang aktif berisi warna penuh, yang lain redup (terbaca juga dalam abu-abu) */
+.tb[aria-selected="true"] { background: var(--accent-deep); color: #fff; border-color: #7A3410; box-shadow: 0 5px 0 #7A3410; }
+.tb[aria-selected="true"] b { color: #fff; }
+.tb[aria-selected="false"] { opacity: .78; }
+@media (max-width: 520px) { .tb span { display: none; } .tb { min-height: 64px; align-items: center; } }
+/* tablet tegak: kartu menu tidak melar */
+@media (orientation: portrait) and (min-width: 701px) {
+  .menu { flex: none; grid-auto-rows: 236px; max-height: none; align-content: start; }
+  .menu.n7 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .menu.n7 > li:nth-child(5) { grid-column: auto / span 2; }
+  .menu.n7 > li:nth-child(7) { grid-column: 3 / span 2; }
+  .m-art { height: 120px; }
+}
+/* benda lebih besar */
+.q-prompt .pola { --ob: clamp(60px, 14vh, 124px); }
+.q-prompt .sum { --ob: clamp(48px, 10vh, 92px); }
+.sum { --ob: clamp(52px, 10vh, 96px); }
+.grp { flex-direction: column; flex-wrap: nowrap; align-items: center; max-width: none; }
+.r5 { display: flex; gap: 6px; flex-wrap: nowrap; }
+.pola.units { flex-wrap: wrap; gap: 14px 22px; --ob: clamp(60px, 11vh, 104px); }
+.pu { display: flex; gap: 6px; flex: none; padding: 6px; border-radius: 18px; background: var(--tint); }
+.pola.units .ob { flex: none; width: var(--ob); height: var(--ob); }
+.tile .pola .ob { flex: 0 1 31%; }
+.tile .eqt { font-size: .5em; }
+/* tile bergambar terpilih: isi penuh seperti tile lain */
+[data-sec="kata"] .tile[aria-pressed="true"], [data-sec="awal"] .tile[aria-pressed="true"], [data-sec="pola"] .tile[aria-pressed="true"] { background: var(--hue); border-color: var(--hue-deep); box-shadow: 0 5px 0 var(--hue-deep); }
+[data-sec="kata"] .tile[aria-pressed="true"] small, [data-sec="awal"] .tile[aria-pressed="true"] small { color: #fff; }
+/* slot berikutnya berdenyut supaya urutannya jelas */
+.slot.next { border-color: var(--hue-deep); animation: slotnext 1.1s ease-in-out infinite; }
+@keyframes slotnext { 50% { transform: scale(1.06); background: #fff; } }
+@media (max-width: 700px) {
+  .sum { --ob: 60px; } .q-prompt .sum { --ob: 44px; }
+  .pola.units { --ob: 66px; gap: 12px; }
+  .q-prompt .pola { --ob: 60px; }
+}
+@media (max-width: 380px) { .q-prompt .sum { --ob: 38px; } .r5 { gap: 4px; } }
+/* soal pola: satu baris di layar lebar; di ponsel pindah baris per satuan pola */
+.q-prompt .pola.units.ask { flex-wrap: nowrap; gap: clamp(4px, 1.2vw, 12px); }
+.q-prompt .pola.units.ask .pu { display: contents; }
+.q-prompt .pola.units.ask .ob { flex: 0 1 var(--ob); width: auto; height: auto; aspect-ratio: 1; min-width: 0; }
+@media (max-width: 700px) {
+  .q-prompt .pola.units.ask { flex-wrap: wrap; gap: 10px 14px; --ob: 58px; }
+  .q-prompt .pola.units.ask .pu { display: flex; }
+  .q-prompt .pola.units.ask .ob { flex: none; width: var(--ob); height: var(--ob); }
+}

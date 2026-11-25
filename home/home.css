@@ -25,6 +25,7 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
 .lede { margin-top: 6px; font-size: 18px; line-height: 1.4; color: var(--ink-soft); max-width: 40ch; text-wrap: balance; }
 
 .cat { margin-top: 44px; padding: 20px 16px 24px; border-radius: 32px; }
+.cat-tk { background: #F9CFDC; margin-top: 32px; }
 .cat-formal { background: #E1EFCB; }
 .cat-game { background: #F6C48E; }
 .cat h2 { display: flex; align-items: center; gap: 10px; font-size: 28px; line-height: 1.1; color: var(--ink); margin: 0 0 16px 2px; }
@@ -42,6 +43,8 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
 .pic.grade .kl { display: block; font-family: var(--display); font-weight: 800; font-size: 15px; line-height: 1; margin-top: 4px; }
 .pic.grade .num { display: block; font-family: var(--display); font-weight: 800; font-size: 56px; line-height: .95; }
 .pic.grade .mini { position: absolute; top: -10px; left: -10px; width: 36px; height: 36px; padding: 4px; background: #fff; border: 2px solid var(--hill); border-radius: 50%; }
+.tk .pic.grade { background: #FFE1EA; color: #A0224F; }
+.cards-one { grid-template-columns: minmax(0, 1fr); }
 .game .pic { background: var(--sel); }
 .pic:not(.grade) img { width: 76px; height: 76px; display: block; }
 .txt { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -53,6 +56,7 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
 .go { display: flex; align-items: center; justify-content: center; min-height: 60px; border-radius: 18px; border: 3px solid; color: #fff;
   font-family: var(--display); font-weight: 800; font-size: 22px; }
 .formal .go { background: var(--leaf-deep); border-color: #2C6120; box-shadow: 0 5px 0 #2C6120; }
+.tk .go { background: #B5365F; border-color: #8A2346; box-shadow: 0 5px 0 #8A2346; }
 .game .go { background: var(--accent-deep); border-color: #8E3C10; box-shadow: 0 5px 0 #8E3C10; }
 .card:not([aria-disabled="true"]):active .go { transform: translateY(3px); box-shadow: none; }
 .card[aria-disabled="true"] { background: var(--card); }
@@ -62,7 +66,7 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
 .foot { margin-top: 28px; text-align: center; font-size: 14px; color: var(--ink-soft); }
 
 @media (max-width: 600px) {
-  .cards { grid-template-columns: 1fr; gap: 14px; }
+  .cards, .cards-one { grid-template-columns: 1fr; gap: 14px; }
   .card { min-height: 0; }
   .head { gap: 12px; }
   .cat { margin-top: 40px; padding: 16px 12px 20px; border-radius: 28px; }

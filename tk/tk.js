@@ -47,13 +47,15 @@
   function drawStars() { document.querySelectorAll('.chip.stars b').forEach(function (b) { b.textContent = S.stars; }); }
 
   /* ---------- suara ---------- */
-  var synth = window.speechSynthesis || null, voice = null, token = 0, timer = null;
+  var synth = window.speechSynthesis || null, voice = null, arVoice = null, token = 0, timer = null;
   function pickVoice() {
     try {
       var vs = synth ? synth.getVoices() : [];
-      voice = null;
+      voice = null; arVoice = null;
       for (var i = 0; i < vs.length; i++) if (/^id([-_]|$)/i.test(vs[i].lang)) { voice = vs[i]; break; }
-    } catch (e) { voice = null; }
+      /* suara Arab (bila tablet punya) untuk membaca huruf berharakat dengan makhraj yang lebih tepat */
+      for (var j = 0; j < vs.length; j++) if (/^ar([-_]|$)/i.test(vs[j].lang)) { arVoice = vs[j]; break; }
+    } catch (e) { voice = null; arVoice = null; }
   }
   if (synth) { pickVoice(); try { synth.addEventListener('voiceschanged', pickVoice); } catch (e) { synth.onvoiceschanged = pickVoice; } }
   function stopSay() { token++; clearTimeout(timer); try { if (synth) synth.cancel(); } catch (e) {} }
@@ -64,15 +66,17 @@
     function next() {
       if (my !== token) return;
       if (i >= parts.length) { if (done) done(); return; }
-      var p = parts[i++];
+      var p = parts[i++], ar = false;
       if (typeof p === 'number') { timer = setTimeout(next, p); return; }
+      /* {ar: teks Arab, id: cadangan} : pakai suara Arab bila ada */
+      if (p && typeof p === 'object') { if (arVoice) { ar = true; p = p.ar; } else p = p.id; }
       var finished = false;
       function fin() { if (finished || my !== token) return; finished = true; clearTimeout(timer); next(); }
       try {
         if (!synth || typeof SpeechSynthesisUtterance === 'undefined') throw 0;
         var u = new SpeechSynthesisUtterance(p);
-        u.lang = 'id-ID'; u.rate = 0.85; u.pitch = 1.1;
-        if (voice) u.voice = voice;
+        u.lang = ar ? arVoice.lang : 'id-ID'; u.rate = ar ? 0.7 : 0.85; u.pitch = 1.1;
+        if (ar) u.voice = arVoice; else if (voice) u.voice = voice;
         u.onend = fin; u.onerror = fin;
         synth.speak(u);
         timer = setTimeout(fin, 1500 + p.length * 130);
@@ -249,7 +253,7 @@
       return types.map(function (t) {
         var n = 0; t.split('').forEach(function (ch) { n = Math.max(n, ch.charCodeAt(0) - 64); });
         var p = { pola: t, benda: shuffle(BENDA.map(function (b, i) { return i; })).slice(0, n) };
-        var shown = Math.max(5, 2 * t.length - 1), seq = polaSeq(p, shown + 1), ans = seq[shown], o = [ans];
+        var shown = Math.max(6, 2 * t.length - 1), seq = polaSeq(p, shown + 1), ans = seq[shown], o = [ans];
         shuffle(p.benda).concat(shuffle(BENDA.map(function (b, i) { return i; }))).forEach(function (i) { if (o.indexOf(i) < 0 && o.length < 3) o.push(i); });
         return { ask: 'Apa selanjutnya?', prompt: polaUnits(p, shown, true), win: BENDA[ans].nama,
           choices: shuffle(o).map(function (i) { return { html: img(BENDA[i].gambar), label: BENDA[i].nama, ok: i === ans }; }) };
@@ -260,7 +264,7 @@
     name: 'A Ba Ta', say: 'A, ba, ta. Huruf hijaiah berharakat', list: T2.harakat || [], tint: '#DDEFCB', hue: '#2E7D32', deep: '#1F5C23', idle: 'huruf', tahap: 2,
     id: function (x) { return x.h; }, same: function (x) { return x.kunci || x.baca; },
     glyph: function (x) { return '<span class="arab" lang="ar" dir="rtl" data-ah="' + esc(x.h) + '"' + arabStyle(x.h) + '>' + esc(x.h) + '</span>'; }, label: function (x) { return 'Huruf ' + x.baca; },
-    speak: function (x) { return [x.ucap || x.baca]; },
+    speak: function (x) { return [{ ar: x.h, id: x.ucap || x.baca }]; },
     ask: function (x) { return 'Mana ' + (x.ucap || x.baca) + '?'; }, text: function (x) { return 'Mana ' + x.baca + '?'; },
     stage: function (x) { return '<div class="st-glyph arab" lang="ar" dir="rtl" data-ah="' + esc(x.h) + '"' + arabStyle(x.h) + '>' + esc(x.h) + '</div><div class="st-word">' + esc(x.baca) + '</div>'; }
   };

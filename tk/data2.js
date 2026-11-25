@@ -1,7 +1,7 @@
 // Abaqa TK Tahap 2: pelajaran lanjutan. Gambar: Microsoft Fluent Emoji (MIT).
 // Dasar: CP Fase Fondasi (pramembaca, pramenulis, pramatematika) dan STPPA usia 5-6 tahun
 // (membilang, lambang bilangan, pola ABCD-ABCD). Membaca permulaan memakai metode suku kata
-// (KV lalu KV-KV). Hijaiah berharakat fathah mengikuti urutan Iqro jilid 1.
+// (KV lalu KV-KV). Hijaiah berharakat fathah mengikuti urutan dan tulisan Iqro jilid 1 (alif polos berfathah).
 window.TK2 = {
   /* suku kata KV: satu keluarga konsonan per tile */
   suku: ["b", "c", "d", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "w", "y"],
@@ -33,8 +33,8 @@ window.TK2 = {
     {"kata": "Anggur", "gambar": "aset/grapes.svg"},
     {"kata": "Balon", "gambar": "aset/balloon.svg"},
     {"kata": "Cokelat", "gambar": "aset/chocolate-bar.svg"},
-    {"kata": "Daun", "gambar": "aset/maple-leaf.svg"},
-    {"kata": "Es krim", "gambar": "aset/soft-ice-cream.svg"},
+    {"kata": "Daun", "gambar": "aset/leaf-fluttering-in-wind.svg"},
+    {"kata": "Ember", "gambar": "aset/bucket.svg"},
     {"kata": "Gurita", "gambar": "aset/octopus.svg"},
     {"kata": "Helikopter", "gambar": "aset/helicopter.svg"},
     {"kata": "Jamur", "gambar": "aset/mushroom.svg"},
@@ -88,7 +88,7 @@ window.TK2 = {
     {"nama": "anggur", "gambar": "aset/grapes.svg"},
     {"nama": "stroberi", "gambar": "aset/strawberry.svg"},
     {"nama": "semangka", "gambar": "aset/watermelon.svg"},
-    {"nama": "lemon", "gambar": "aset/lemon.svg"},
+    {"nama": "kelapa", "gambar": "aset/coconut.svg"},
     {"nama": "ceri", "gambar": "aset/cherries.svg"}
   ],
   /* pola: urutan satuan, huruf = indeks benda */
@@ -104,7 +104,7 @@ window.TK2 = {
   /* hijaiah berharakat fathah, urutan Iqro jilid 1. "ucap" untuk suara, "kunci" menyamakan bunyi yang
      terdengar sama di suara tablet (a/'a, ha/ha, sa/tsa, za/dza/zho, ka/kho/qo) supaya tidak muncul bersama di kuis. */
   harakat: [
-    {"h": "أَ", "baca": "a", "kunci": "a"},
+    {"h": "اَ", "baca": "a", "kunci": "a"},
     {"h": "بَ", "baca": "ba"},
     {"h": "تَ", "baca": "ta"},
     {"h": "ثَ", "baca": "tsa", "kunci": "s"},

@@ -8,6 +8,34 @@
   var $ = function (s) { return document.querySelector(s); };
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  /* huruf hijaiah: ukur kotak tinta tiap glyph, lalu besarkan yang kecil (ه ء) supaya tinggi visualnya mirip */
+  var ARAB = {}, ARAB_N = 0;
+  function measureArab() {
+    var list = D.hijaiah || [], f = getComputedStyle(document.body).getPropertyValue('--arab') || 'serif', rows = [];
+    try {
+      var c = document.createElement('canvas').getContext('2d'); c.font = '700 100px ' + f; c.direction = 'rtl';
+      list.forEach(function (x) {
+        var m = c.measureText(x.h), h = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent, w = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
+        if (h > 0 && w > 0) rows.push({ h: x.h, ih: h, iw: w, cy: (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2 });
+      });
+    } catch (e) { return; }
+    if (rows.length < 5) return;
+    var med = function (a) { a = a.slice().sort(function (p, q) { return p - q; }); return a[a.length >> 1]; };
+    var mv = med(rows.map(function (r) { return Math.sqrt(r.ih * r.iw); })), mh = med(rows.map(function (r) { return r.ih; })), mc = med(rows.map(function (r) { return r.cy; }));
+    ARAB = {};
+    rows.forEach(function (r) {
+      var sc = Math.min(1.4, Math.max(1, mv / Math.sqrt(r.ih * r.iw)));
+      sc = Math.min(sc, 1.12 * mh / r.ih, 150 / r.iw);   /* jangan terlalu tinggi, jangan terlalu lebar untuk tile */
+      sc = Math.max(.85, sc);
+      ARAB[r.h] = { s: Math.round(sc * 100) / 100, y: Math.round((mc - r.cy) * sc) / 100 * -1 };
+    });
+    ARAB_N++;
+  }
+  function arabStyle(h) { var a = ARAB[h]; return a ? ' style="--gs:' + a.s + ';--gy:' + a.y + '"' : ''; }
+  function applyArab() {
+    measureArab();
+    document.querySelectorAll('[data-ah]').forEach(function (e) { var a = ARAB[e.dataset.ah]; if (a) { e.style.setProperty('--gs', a.s); e.style.setProperty('--gy', a.y); } });
+  }
   function icon(id) { return '<svg class="ic" aria-hidden="true"><use href="#i-' + id + '"/></svg>'; }
   function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
@@ -74,7 +102,7 @@
     hijaiah: {
       name: 'Huruf Hijaiah', say: 'Huruf hijaiah', list: D.hijaiah || [], tint: '#DDEFCB', hue: '#3F8A30', deep: '#2F6E24', idle: 'huruf',
       id: function (x) { return x.h; }, same: function (x) { return x.ucap || x.nama; },
-      glyph: function (x) { return '<span class="arab" lang="ar" dir="rtl">' + esc(x.h) + '</span>'; }, label: function (x) { return 'Huruf ' + x.nama; },
+      glyph: function (x) { return '<span class="arab" lang="ar" dir="rtl" data-ah="' + esc(x.h) + '"' + arabStyle(x.h) + '>' + esc(x.h) + '</span>'; }, label: function (x) { return 'Huruf ' + x.nama; },
       speak: function (x) { return [x.ucap || x.nama]; },
       ask: function (x) { return 'Mana huruf ' + (x.ucap || x.nama) + '?'; }
     },
@@ -126,13 +154,14 @@
   /* ukuran benda hitung: terbesar yang muat rapi di ruang yang ada, tanpa menimpa angka */
   function fitItems() {
     var box = body.querySelector('.items'); if (!box) return;
-    var n = box.children.length, cs = getComputedStyle(box), W = box.clientWidth - 16, gx = 10, gy = 12, H;
-    if (cs.flexGrow === '0') H = Math.max(180, Math.min(300, innerHeight * .28)); else { box.style.setProperty('--it', '40px'); H = box.clientHeight - 12; }
+    var n = box.children.length, cs = getComputedStyle(box), ph = innerWidth <= 700, gx = ph ? 6 : 10, gy = ph ? 10 : 12, W = box.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0), H;
+    box.style.columnGap = gx + 'px'; box.style.rowGap = gy + 'px';
+    if (cs.flexGrow === '0') H = Math.max(180, Math.min(300, innerHeight * .28)); else { box.style.setProperty('--it', '40px'); H = box.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0); }
     var best = 0, fallback = 40;
-    for (var s = 128; s >= 40; s -= 4) {
+    for (var s = 128; s >= 40; s -= 2) {
       var cols = Math.max(1, Math.floor((W + gx) / (s + gx))), rows = Math.ceil(n / cols);
       if (rows * (s + gy) - gy > H) continue;
-      if (!fallback || fallback === 40) fallback = s;
+      if (fallback === 40) fallback = s;
       /* hindari satu benda sendirian di baris terakhir */
       if (rows > 1 && n % cols === 1) continue;
       best = s; break;
@@ -140,7 +169,51 @@
     if (!best) best = fallback;
     box.style.setProperty('--it', best + 'px');
   }
-  window.addEventListener('resize', function () { fitItems(); checkMore(); });
+  /* papan: kolom seimbang (tanpa satu tile sendirian) dan, di tablet mendatar, tile terbesar yang muat tanpa gulir */
+  var LAND = window.matchMedia ? matchMedia('(min-width: 701px) and (orientation: landscape)') : { matches: false };
+  function fitBoard() {
+    if (!cur || !board.children.length || sec.hidden) return;
+    var n = cur.list.length, cs = getComputedStyle(board), gx = 10, gy = 14, k = cur.key, wide = k === 'warna' || k === 'bentuk';
+    var W = board.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    var H = board.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+    var st = board.style, cols, rows;
+    var tiles = board.children, t;
+    if (LAND.matches) {
+      var cap = 150;
+      /* tata letak seimbang: tiap baris hampir sama banyak, baris pendek ditaruh di tengah (kolom ganda, tile mengambil 2 kolom) */
+      var lay = function (s) {
+        var c = Math.max(1, Math.floor((W + gx) / (s + gx))), r = Math.ceil(n / c), h = r * (s + gy) - gy;
+        if (h > H || (r > 1 && Math.floor(n / r) < 2)) return null;
+        return { c: c, r: r, fill: h / H };
+      };
+      var best = 0, info = null, s, g;
+      for (s = cap; s >= 56; s -= 2) { info = lay(s); if (info) { best = s; break; } }
+      if (!best) { best = 64; var c0 = Math.max(1, Math.floor((W + gx) / (best + gx))); info = { c: c0, r: Math.ceil(n / c0) }; }
+      else if (info.fill < .6) {
+        /* sedikit isi (mis. bentuk 7): besarkan melewati batas biasa sampai papan terisi >= 60% tinggi */
+        for (s = cap + 2; s <= 200; s += 2) { g = lay(s); if (g && g.fill >= .6) { best = s; info = g; break; } }
+      }
+      var base = Math.floor(n / info.r), extra = n % info.r, idx = 0, row, k, j2;
+      for (row = 0; row < info.r; row++) {
+        k = base + (row < extra ? 1 : 0);
+        for (j2 = 0; j2 < k && idx < n; j2++, idx++) { t = tiles[idx]; if (t) t.style.gridColumn = (1 + (info.c - k) + 2 * j2) + ' / span 2'; }
+      }
+      st.setProperty('--tile', best + 'px'); st.setProperty('--c2', info.c * 2); st.removeProperty('--cols'); st.removeProperty('--tmax');
+      board.classList.remove('orphan');
+      return;
+    }
+    for (t = 0; t < tiles.length; t++) tiles[t].style.gridColumn = '';
+    st.removeProperty('--c2');
+    var minT = innerWidth <= 700 ? (wide ? 112 : 72) : (wide ? 112 : 80);
+    var c0 = Math.max(1, Math.floor((W + gx) / (minT + gx)));
+    rows = Math.ceil(n / c0); cols = Math.ceil(n / rows);
+    st.removeProperty('--tile'); st.setProperty('--cols', cols);
+    /* tablet tegak: papan tidak menggulir, jadi batasi ukuran tile agar baris-barisnya muat di tinggi terkecil (panggung terbuka) */
+    if (innerWidth > 700) { var frac = k === 'angka' ? .205 : .41, padV = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0), tm = Math.min(104, Math.floor((innerHeight * frac - padV + gy) / rows - gy)); st.setProperty('--tmax', Math.max(64, tm) + 'px'); } else st.removeProperty('--tmax');
+    board.classList.toggle('orphan', cols > 1 && n % cols === 1);
+  }
+  window.addEventListener('resize', function () { fitBoard(); fitItems(); checkMore(); });
+  if (LAND.addEventListener) LAND.addEventListener('change', function () { fitBoard(); }); 
 
   function buildBoard() {
     board.innerHTML = cur.list.map(function (x, i) {
@@ -148,7 +221,7 @@
       return '<button class="tile" type="button" role="listitem" aria-pressed="false" aria-label="' + esc(cur.label(x)) + '" data-i="' + i + '" style="--tc:' + c + '">' +
         cur.glyph(x) + extra + (seen(cur.key, cur.id(x)) ? '<svg class="seen" aria-hidden="true"><use href="#i-star"/></svg>' : '') + '</button>';
     }).join('');
-    checkMore();
+    fitBoard(); checkMore();
   }
   board.addEventListener('click', function (e) { var t = e.target.closest('.tile'); if (t) select(+t.dataset.i, true); });
 
@@ -165,7 +238,7 @@
       counted = 0;
       h = '<div class="st-main"><div class="st-glyph" aria-hidden="true">' + x.n + '</div></div><div class="items">' + ims + '</div><div class="st-word">' + esc(cap(x.kata)) + '</div>';
     } else if (k === 'hijaiah') {
-      h = '<div class="st-glyph arab" lang="ar" dir="rtl">' + esc(x.h) + '</div><div class="st-word">' + esc(x.nama) + '</div>';
+      h = '<div class="st-glyph arab" lang="ar" dir="rtl" data-ah="' + esc(x.h) + '"' + arabStyle(x.h) + '>' + esc(x.h) + '</div><div class="st-word">' + esc(x.nama) + '</div>';
     } else if (k === 'warna') {
       h = '<div class="st-swatch" style="background:' + esc(x.hex) + '"><img src="' + esc(x.gambar) + '" alt=""></div><div class="st-word">' + esc(cap(x.nama)) + '</div>';
     } else {
@@ -232,7 +305,7 @@
   }
   function askQ(speak) {
     var x = Q.order[Q.i], key = cur.same(x);
-    Q.wrong = 0; Q.lock = false; Q.target = x;
+    Q.wrong = 0; Q.lock = false; Q.target = x; $('#choices').classList.remove('hinting');
     /* pengecoh: tidak boleh punya ucap/nama sama dengan jawaban (mis. dua huruf "ha") dan tidak saling sama */
     var seenKeys = {}; seenKeys[key] = 1;
     var others = [];
@@ -261,7 +334,7 @@
     var b = e.target.closest('.ch'); if (!b || !Q || Q.lock) return;
     if (b.dataset.ok === '1') {
       Q.lock = true; Q.got++; S.stars++; save(); drawStars(); drawQStars();
-      b.classList.remove('hint'); b.classList.add('good'); burst(b);
+      b.classList.remove('hint'); $('#choices').classList.remove('hinting'); b.classList.add('good'); burst(b);
       var ready = 0, go = function () { if (++ready < 2) return; Q.i++; if (Q.i >= 5 || Q.i >= Q.order.length) celebrate(); else askQ(true); };
       say([PRAISE[Math.floor(Math.random() * PRAISE.length)]], go);
       setTimeout(go, 1300);
@@ -269,8 +342,9 @@
       Q.wrong++;
       b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
       setTimeout(function () { b.classList.remove('shake'); }, 700);
-      say(['Coba lagi, ya']);
-      if (Q.wrong >= 2) { var g = $('#choices').querySelector('[data-ok="1"]'); if (g) g.classList.add('hint'); }
+      var tgt = Q.wrong >= 2 ? $('#choices').querySelector('[data-ok="1"]') : null;
+      if (tgt) { $('#choices').classList.add('hinting'); tgt.classList.add('hint'); say(['Coba lagi, ya', 300, cur.ask(Q.target)]); }
+      else say(['Coba lagi, ya']);
     }
   });
   function celebrate() {
@@ -303,6 +377,15 @@
   /* judul bagian: tampil di layar lebar; ikon cukup di ponsel */
   window.addEventListener('hashchange', route);
 
+  /* dialog orang tua: isi bisa digulir, tombol Tutup selalu terlihat */
+  (function () {
+    var d = $('#ortu'), btn = $('#ortuClose'); if (!d || !btn) return;
+    var box = document.createElement('div'); box.className = 'dlg-scroll';
+    Array.prototype.slice.call(d.children).forEach(function (el) { if (el !== btn) box.appendChild(el); });
+    d.insertBefore(box, btn);
+  })();
+  measureArab();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { applyArab(); }, function () {});
   $('#ortuH').setAttribute('tabindex', '-1');
   buildMenu(); drawStars();
   $('#openOrtu').addEventListener('click', function () { var d = $('#ortu'); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); d.scrollTop = 0; try { $('#ortuH').focus({ preventScroll: true }); } catch (e) {} });

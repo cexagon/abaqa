@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="kancil  mood-happy" viewBox="0 0 160 160" role="img" aria-label="Kancil">
+    <ellipse cx="80" cy="152" rx="56" ry="5" fill="rgba(0,0,0,.08)"/>
+    <ellipse cx="36" cy="88" rx="9" ry="6" fill="#F3DDB8" transform="rotate(-30 36 88)"/>
+    <rect x="50" y="108" width="8" height="40" rx="4" fill="#8A5428"/>
+    <rect x="62" y="110" width="8" height="38" rx="4" fill="#7A4822"/>
+    <rect x="94" y="110" width="8" height="38" rx="4" fill="#8A5428"/>
+    <rect x="106" y="108" width="8" height="40" rx="4" fill="#7A4822"/>
+    <ellipse cx="78" cy="98" rx="44" ry="26" fill="#B87333"/>
+    <ellipse cx="82" cy="110" rx="28" ry="11" fill="#F3DDB8"/>
+    <path d="M100 86 Q106 66 114 64 L128 74 Q122 94 112 102 Z" fill="#B87333"/>
+    <g class="ear-l"><ellipse cx="106" cy="38" rx="7" ry="17" fill="#A8652B" transform="rotate(-22 106 38)"/><ellipse cx="106" cy="39" rx="3.5" ry="11" fill="#E9A97A" transform="rotate(-22 106 39)"/></g>
+    <g class="ear-r"><ellipse cx="124" cy="36" rx="7" ry="17" fill="#A8652B" transform="rotate(12 124 36)"/><ellipse cx="124" cy="37" rx="3.5" ry="11" fill="#E9A97A" transform="rotate(12 124 37)"/></g>
+    <circle cx="118" cy="62" r="22" fill="#B87333"/>
+    <ellipse cx="136" cy="71" rx="15" ry="10" fill="#C98A4E"/>
+    <ellipse cx="128" cy="78" rx="10" ry="5" fill="#F3DDB8"/>
+    <circle cx="149" cy="67" r="4" fill="#3B2614"/>
+    <g class="eye"><circle cx="121" cy="57" r="6" fill="#3B2614"/><circle cx="123" cy="55" r="2" fill="#fff"/></g>
+    <circle cx="112" cy="70" r="4.5" fill="#F09A6B" opacity=".55"/>
+    <path class="m-happy" d="M133 79 Q139 84 146 77" stroke="#3B2614" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle class="m-think" cx="140" cy="80" r="2.6" fill="#3B2614"/>
+    <path class="m-cheer" d="M131 77 Q139 90 148 76 Z" fill="#3B2614"/>
+    <path class="m-cheer" d="M135 80 Q139 85 144 79 Z" fill="#F09A6B"/>
+  </svg>

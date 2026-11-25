@@ -24,7 +24,8 @@
   try {
     var lab = document.querySelector('[data-lab]');
     if (lab) {
-      set(lab, 'Belum mulai, ayo kenalan dengan Pipo');
+      var L = read('labBuCanni'), n = L && L.done ? L.done.length : 0;
+      set(lab, n ? 'Sudah <b>' + n + '</b> dari 5 episode' : 'Belum mulai, ayo kenalan dengan Pipo');
       fetch(lab.getAttribute('href') + 'index.html', { method: 'HEAD', cache: 'no-store' }).then(function (r) {
         if (r.status === 404) {
           lab.setAttribute('aria-disabled', 'true');

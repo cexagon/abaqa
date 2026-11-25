@@ -135,6 +135,7 @@
     render(`
       <div class="center hero">
         ${A.SCENE_BG}
+        <a class="btn ghost back-abaqa" href="../" style="position:absolute;top:12px;left:12px;z-index:5;min-height:48px;padding:8px 16px;font-size:18px">← Abaqa</a>
         <div class="hero-body">
           ${A.KANCIL('hero-k', 'happy')}
           <h1>Kebun <span>Hitung</span></h1>

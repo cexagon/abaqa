@@ -34,7 +34,7 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
 .card { height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 16px; background: #fff; border: 3px solid var(--hill);
   border-radius: 26px; box-shadow: 0 6px 0 var(--hill); transition: transform .1s, box-shadow .1s; min-height: 220px; }
 .card:not([aria-disabled="true"]):active { transform: translateY(4px); box-shadow: 0 2px 0 var(--hill); }
-.top { display: flex; gap: 14px; align-items: center; }
+.top { display: flex; gap: 14px; align-items: flex-start; }
 .pic { flex: none; width: 96px; height: 96px; border-radius: 22px; display: grid; place-items: center; }
 .pic.grade { display: flex; justify-content: center; }
 .formal .pic { background: var(--leaf-soft); }
@@ -45,7 +45,7 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
 .game .pic { background: var(--sel); }
 .pic:not(.grade) img { width: 76px; height: 76px; display: block; }
 .txt { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.name { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.05; }
+.name { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.05; text-wrap: balance; }
 .desc { font-size: 16px; line-height: 1.35; color: var(--ink-soft); }
 .prog { font-size: 15px; color: var(--ink-soft); min-height: 20px; margin-top: auto; }
 .prog b { font-family: var(--display); font-size: 18px; color: var(--ink); }

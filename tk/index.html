@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Abaqa TK, main huruf dan angka</title>
+<title>Abaqa TK, main huruf, angka, dan mulai membaca</title>
 <meta name="description" content="Main huruf, angka, huruf hijaiah, warna, dan bentuk untuk anak TK. Ada suaranya, ada gambarnya, tanpa iklan.">
 <meta name="theme-color" content="#FFF3D1">
 <link rel="icon" href="../icons/icon-192.png" type="image/png">
@@ -35,6 +35,10 @@
       <h1 class="menu-title">Ayo belajar!</h1>
       <span class="chip stars" id="menuStars" aria-label="Bintang"><svg class="ic"><use href="#i-star"/></svg><b>0</b></span>
     </header>
+    <div class="tahap" role="tablist" aria-label="Pilih tahap">
+      <button class="tb" type="button" role="tab" data-t="1" aria-selected="true"><b>Tahap 1</b><span>Kenal huruf &amp; angka</span></button>
+      <button class="tb" type="button" role="tab" data-t="2" aria-selected="false"><b>Tahap 2</b><span>Mulai membaca &amp; berhitung</span></button>
+    </div>
     <ul class="menu" id="menuCards"></ul>
     <div class="menu-foot"><button class="btn ghost" id="openOrtu" type="button"><svg class="ic"><use href="#i-grown"/></svg><span>Untuk orang tua</span></button></div>
   </section>
@@ -70,6 +74,7 @@
         <p class="q-text" id="qText"></p>
         <div class="q-stars" id="qStars" aria-hidden="true"></div>
       </div>
+      <div class="q-prompt" id="qPrompt" hidden></div>
       <div class="choices" id="choices"></div>
       <div class="celebrate" id="celebrate" hidden>
         <div class="cel-stars" id="celStars" aria-hidden="true"></div>
@@ -89,13 +94,17 @@
     <li>Duduklah di samping anak dan biarkan ia yang mengetuk. Anda cukup menemani dan ikut senang.</li>
     <li>Ajak menirukan suaranya: ucapkan huruf atau angka bersama, pelan dan ceria.</li>
     <li>Cari benda di rumah yang huruf awalnya sama, misalnya B untuk bantal, atau hitung sendok di meja sampai tiga.</li>
+    <li><b>Tahap 2</b> untuk anak yang sudah kenal huruf dan angka 1 sampai 10. Urutan yang disarankan: Suku Kata, lalu Baca Kata dan Huruf Awal; Angka 11–20, lalu Tambah Kurang dan Pola; A Ba Ta untuk mulai membaca hijaiah berharakat fathah seperti Iqro jilid 1.</li>
+    <li>Saat Baca Kata, ajak anak mengetuk suku katanya satu per satu, lalu menyambungnya: "bu... ku... buku!". Di Tambah Kurang, hitung bersama dengan jari.</li>
     <li>Cukup 5 sampai 10 menit sekali main. Tidak ada nilai dan tidak ada batas waktu; bintang hanya hadiah kecil.</li>
   </ul>
+  <p class="note">Isi Tahap 2 mengikuti Capaian Pembelajaran PAUD Fase Fondasi (pramembaca dan pramatematika) dan STPPA usia 5–6 tahun: membilang, lambang bilangan, dan pola seperti ABCD-ABCD. Membaca memakai metode suku kata, mulai dari suku kata terbuka (ba, bi, bu) lalu kata dua suku kata.</p>
   <p class="note">Bila suara tidak keluar, naikkan volume dan cek pengaturan suara bahasa Indonesia di tablet.</p>
   <button class="btn big-go" id="ortuClose" type="button"><span>Tutup</span></button>
 </dialog>
 
 <script src="./data.js"></script>
+<script src="./data2.js"></script>
 <script src="./tk.js"></script>
 </body>
 </html>

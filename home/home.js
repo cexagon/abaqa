@@ -12,6 +12,11 @@
   });
 
   try {
+    var tk = document.querySelector('[data-tk]'), T = read('abaqa-tk');
+    if (tk) set(tk, T && T.stars ? '<b>' + (+T.stars) + '</b> bintang terkumpul' : 'Belum mulai, ayo kenalan dengan huruf');
+  } catch (e) {}
+
+  try {
     var kb = document.querySelector('[data-kebun]'), D = read('kebun-hitung-v2');
     if (kb) {
       var stars = 0;

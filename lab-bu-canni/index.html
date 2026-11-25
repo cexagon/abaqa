@@ -20,7 +20,7 @@
   .stage{flex:0 0 auto;margin:4px 14px;background:linear-gradient(var(--sky2),var(--sky));border-radius:28px;overflow:hidden;box-shadow:0 6px 0 var(--shadow);position:relative}
   .stage svg{display:block;width:100%;height:auto}
   .panel{flex:1 1 auto;display:flex;flex-direction:column;padding:6px 14px 14px;gap:10px;min-height:0;overflow:auto}
-  .bubble{position:relative;background:var(--paper);border-radius:24px;padding:14px 48px 14px 14px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 5px 0 var(--shadow);min-height:96px}
+  .bubble{position:relative;background:var(--paper);border-radius:24px;padding:14px 48px 14px 14px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 5px 0 var(--shadow);min-height:96px;flex-shrink:0}
   .bubble .avatar{flex:0 0 64px;width:64px;height:64px}
   .bubble .who{font-size:12px;font-weight:700;color:var(--coral);letter-spacing:.5px;margin-bottom:2px}
   .bubble p{margin:0;font-size:19px;line-height:1.35;font-weight:500}
@@ -213,7 +213,7 @@ function hub(){
   if(done.length===0) speak('Halo! Aku Bu Canni. Di balik lemari kelas, ada lima pintu rahasia. Pipo punya cita-cita pergi ke Mars, tapi rovernya belum lengkap. Tiap pintu memberi satu kepingan. Ayo mulai dari pintu satu!');
   else if(done.length>=5) speak('Semua pintu sudah terbuka dan Pipo sudah sampai di Mars! Kamu bisa main lagi episode mana saja.');
   else speak(`Kepingan rover sudah ${KATA[done.filter(n=>n<5).length]} dari empat. Ayo buka pintu ${KATA[nextN]}!`);
-  controls(btn(done.length>=5?'Main lagi 🔁':`Pintu ${nextN}: ${EPISODES[nextN-1].title} ▶`,()=>EPISODES[nextN-1].start(),'mint')+btn('Buku Penasaran 📒',bookView,'ghost'));
+  controls(btn(done.length>=5?'Main lagi 🔁':`Pintu ${nextN}: ${EPISODES[nextN-1].title} ▶`,()=>EPISODES[nextN-1].start(),'mint')+btn('Buku Penasaran 📒',bookView,'ghost')+'<a class="btn ghost" href="../" style="text-decoration:none;min-height:44px;display:inline-flex;align-items:center">← Abaqa</a>');
 }
 function bookView(){
   setStep(-1); scene.innerHTML=`<rect width="400" height="300" fill="#FFF8E7"/><text x="200" y="40" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="20" fill="#2B2D42">BUKU PENASARAN</text>${pipo(200,190,'happy',1.1)}`;

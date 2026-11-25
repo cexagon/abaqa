@@ -24,18 +24,26 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
 .head h1 { font-size: clamp(40px, 7vw, 56px); }
 .lede { margin-top: 6px; font-size: 18px; line-height: 1.4; color: var(--ink-soft); max-width: 40ch; text-wrap: balance; }
 
-.cat { margin-top: 28px; }
-.cat h2 { font-size: 22px; color: var(--ink-soft); margin: 0 0 12px 4px; }
+.cat { margin-top: 44px; padding: 20px 16px 24px; border-radius: 32px; }
+.cat-formal { background: #E1EFCB; }
+.cat-game { background: #F6C48E; }
+.cat h2 { display: flex; align-items: center; gap: 10px; font-size: 28px; line-height: 1.1; color: var(--ink); margin: 0 0 16px 2px; }
+.cat h2 .hi { flex: none; }
 .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 
 .card { height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 16px; background: #fff; border: 3px solid var(--hill);
   border-radius: 26px; box-shadow: 0 6px 0 var(--hill); transition: transform .1s, box-shadow .1s; min-height: 220px; }
-.card:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--hill); }
+.card:not([aria-disabled="true"]):active { transform: translateY(4px); box-shadow: 0 2px 0 var(--hill); }
 .top { display: flex; gap: 14px; align-items: center; }
 .pic { flex: none; width: 96px; height: 96px; border-radius: 22px; display: grid; place-items: center; }
+.pic.grade { display: flex; justify-content: center; }
 .formal .pic { background: var(--leaf-soft); }
+.pic.grade { position: relative; flex-direction: column; align-content: center; gap: 0; background: #D4E9B6; color: #2C6120; text-align: center; }
+.pic.grade .kl { display: block; font-family: var(--display); font-weight: 800; font-size: 15px; line-height: 1; margin-top: 4px; }
+.pic.grade .num { display: block; font-family: var(--display); font-weight: 800; font-size: 56px; line-height: .95; }
+.pic.grade .mini { position: absolute; top: -10px; left: -10px; width: 36px; height: 36px; padding: 4px; background: #fff; border: 2px solid var(--hill); border-radius: 50%; }
 .game .pic { background: var(--sel); }
-.pic img { width: 76px; height: 76px; display: block; }
+.pic:not(.grade) img { width: 76px; height: 76px; display: block; }
 .txt { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .name { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.05; }
 .desc { font-size: 16px; line-height: 1.35; color: var(--ink-soft); }
@@ -46,9 +54,9 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
   font-family: var(--display); font-weight: 800; font-size: 22px; }
 .formal .go { background: var(--leaf-deep); border-color: #2C6120; box-shadow: 0 5px 0 #2C6120; }
 .game .go { background: var(--accent-deep); border-color: #8E3C10; box-shadow: 0 5px 0 #8E3C10; }
-.card:active .go { transform: translateY(3px); box-shadow: none; }
+.card:not([aria-disabled="true"]):active .go { transform: translateY(3px); box-shadow: none; }
 .card[aria-disabled="true"] { background: var(--card); }
-.card[aria-disabled="true"] .pic img { filter: grayscale(.6); }
+.card[aria-disabled="true"] .pic:not(.grade) img { filter: grayscale(.6); }
 .card[aria-disabled="true"] .go { background: #E9E2D3; border-color: var(--line); color: var(--ink); box-shadow: none; }
 
 .foot { margin-top: 28px; text-align: center; font-size: 14px; color: var(--ink-soft); }
@@ -57,8 +65,10 @@ a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
   .cards { grid-template-columns: 1fr; gap: 14px; }
   .card { min-height: 0; }
   .head { gap: 12px; }
+  .cat { margin-top: 40px; padding: 16px 12px 20px; border-radius: 28px; }
+  .cat h2 { font-size: 26px; }
   .logo { width: 60px; height: 60px; }
   .lede { font-size: 17px; }
 }
-@media (hover: hover) { .card:hover { transform: translateY(-2px); } .card:hover:active { transform: translateY(4px); } }
-@media (prefers-reduced-motion: reduce) { .card, .card * { transition: none !important; } .card:hover, .card:active { transform: none; } }
+@media (hover: hover) { .card:not([aria-disabled="true"]):hover { transform: translateY(-2px); } .card:not([aria-disabled="true"]):hover:active { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .card, .card * { transition: none !important; } .card:hover, .card:not([aria-disabled="true"]):active { transform: none; } }

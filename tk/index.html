@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Abaqa TK, main huruf dan angka</title>
+<title>Abaqa TK, main huruf, angka, dan mulai membaca</title>
 <meta name="description" content="Main huruf, angka, huruf hijaiah, warna, dan bentuk untuk anak TK. Ada suaranya, ada gambarnya, tanpa iklan.">
 <meta name="theme-color" content="#FFF3D1">
 <link rel="icon" href="../icons/icon-192.png" type="image/png">
@@ -23,6 +23,8 @@
   <symbol id="i-replay" viewBox="0 0 24 24"><path d="M20 12a8 8 0 11-2.6-5.9M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="i-grown" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M4 21c1-6 15-6 16 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M4 8h4a2 2 0 114 0h4v4a2 2 0 110 4v4H4v-4a2 2 0 100-4z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.5 1.2 6.5L12 17.2l-5.9 3.2 1.2-6.5L2.5 9.4l6.6-.9z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
   <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11V5a1.6 1.6 0 013.2 0v5m0 0V3.8a1.6 1.6 0 013.2 0V10m0 0V5.6a1.6 1.6 0 013.2 0V15c0 4-2.5 6.5-6.3 6.5-3 0-4.5-1.5-6-4L4.5 13.5a1.6 1.6 0 012.5-2L9 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
 </svg>
@@ -35,6 +37,10 @@
       <h1 class="menu-title">Ayo belajar!</h1>
       <span class="chip stars" id="menuStars" aria-label="Bintang"><svg class="ic"><use href="#i-star"/></svg><b>0</b></span>
     </header>
+    <div class="tahap" role="tablist" aria-label="Pilih tahap">
+      <button class="tb" type="button" role="tab" data-t="1" aria-selected="true"><b>Tahap 1</b><span>Kenal huruf &amp; angka</span></button>
+      <button class="tb" type="button" role="tab" data-t="2" aria-selected="false"><b>Tahap 2</b><span>Mulai membaca &amp; berhitung</span></button>
+    </div>
     <ul class="menu" id="menuCards"></ul>
     <div class="menu-foot"><button class="btn ghost" id="openOrtu" type="button"><svg class="ic"><use href="#i-grown"/></svg><span>Untuk orang tua</span></button></div>
   </section>
@@ -70,6 +76,7 @@
         <p class="q-text" id="qText"></p>
         <div class="q-stars" id="qStars" aria-hidden="true"></div>
       </div>
+      <div class="q-prompt" id="qPrompt" hidden></div>
       <div class="choices" id="choices"></div>
       <div class="celebrate" id="celebrate" hidden>
         <div class="cel-stars" id="celStars" aria-hidden="true"></div>
@@ -89,13 +96,18 @@
     <li>Duduklah di samping anak dan biarkan ia yang mengetuk. Anda cukup menemani dan ikut senang.</li>
     <li>Ajak menirukan suaranya: ucapkan huruf atau angka bersama, pelan dan ceria.</li>
     <li>Cari benda di rumah yang huruf awalnya sama, misalnya B untuk bantal, atau hitung sendok di meja sampai tiga.</li>
+    <li><b>Tahap 2</b> untuk anak yang sudah kenal huruf dan angka 1 sampai 10. Urutan yang disarankan: Suku Kata, lalu Huruf Awal dan Baca Kata; Pola; Angka 11–20, lalu Tambah Kurang; A Ba Ta untuk mulai membaca hijaiah berharakat fathah seperti Iqro jilid 1.</li>
+    <li>Huruf "e" di Suku Kata dibaca seperti pada kata "bebek". Untuk A Ba Ta, suara tablet hanya membantu; makhraj yang benar tetap ikuti bacaan ustadzah atau guru mengaji.</li>
+    <li>Saat Baca Kata, ajak anak mengetuk suku katanya satu per satu, lalu menyambungnya: "bu... ku... buku!". Di Tambah Kurang, hitung bersama dengan jari.</li>
     <li>Cukup 5 sampai 10 menit sekali main. Tidak ada nilai dan tidak ada batas waktu; bintang hanya hadiah kecil.</li>
   </ul>
+  <p class="note">Suku Kata, Huruf Awal, dan Pola berangkat dari Capaian Pembelajaran PAUD Fase Fondasi (pramembaca, pramatematika) dan STPPA usia 5–6 tahun (Permendikbud 137/2014: hubungan bunyi dan bentuk huruf, pola ABCD-ABCD). Baca Kata, Angka 11–20, dan Tambah Kurang adalah pengayaan di atas standar TK: pakai bila anak sudah siap, tidak wajib. Membaca memakai metode suku kata, mulai dari suku kata terbuka (ba, bi, bu) lalu kata dua suku kata.</p>
   <p class="note">Bila suara tidak keluar, naikkan volume dan cek pengaturan suara bahasa Indonesia di tablet.</p>
   <button class="btn big-go" id="ortuClose" type="button"><span>Tutup</span></button>
 </dialog>
 
 <script src="./data.js"></script>
+<script src="./data2.js"></script>
 <script src="./tk.js"></script>
 </body>
 </html>

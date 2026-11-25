@@ -2,7 +2,7 @@
    - Shell beranda: disimpan saat install, dilayani dari cache lalu diperbarui di belakang.
    - tk/, latihan-kelas-1/2 dan lab-bu-canni: jaringan dulu, cache sebagai cadangan offline.
    - kebun-hitung/: tidak disentuh (punya sw sendiri). */
-const CACHE = 'abaqa-home-v2';
+const CACHE = 'abaqa-home-v3';
 const SHELL = ['./', './index.html', './home/home.css', './home/home.js', './home/kancil.svg', './home/pipo.svg', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',
   './latihan-kelas-1/aset/open-book.svg', './latihan-kelas-1/aset/books.svg'];

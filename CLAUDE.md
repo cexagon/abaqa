@@ -11,3 +11,6 @@
 - If this ever needs a Cloudflare site: add `.github/workflows/deploy.yml` like the other cexagon repos (push to `main` → `npx -y wrangler@4.86.0`, secrets `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`, `workers_dev`/`preview_urls` false) and a DEPLOY.md. Never deploy by hand.
 - Cloudflare account 894dad2a4e4a1b9d82ab4d2f4f209b41 only (never "Incandescent Saltasaurus").
 - Never print or commit secrets (tokens, API keys, .env / .dev.vars / .secrets files).
+
+## GitHub Actions quota
+- All private cexagon repos share one monthly GitHub Actions allowance (the cexagon account plan). Before you add or change a workflow, or start work that will run many or long Actions jobs (new CI jobs, matrix or scheduled runs, renders or censuses in CI, bulk pushes or many PR updates, re-running failed jobs), stop and tell cex first: what will run, rough minutes per run and per month, and a cheaper option (`paths` filter, `concurrency` cancel-in-progress, run it locally, `[skip ci]` on docs-only commits). Implement only after cex says yes.
